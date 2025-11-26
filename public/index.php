@@ -12,10 +12,23 @@ $router = new Router();
 // La route "/" pointe vers la méthode "index" du contrôleur HomeController
 $router->get('/', 'App\\Controllers\\HomeController@index');
 
-$router->get('/about', 'App\\Controllers\HomeController');
+$router->get('/about', 'App\\Controllers\\HomeController@about');
 
-// La route "/articles" pointe vers la méthode "index" du contrôleur ArticleController
-$router->get('/articles', 'App\\Controllers\\ArticleController@index');
+$router->get('/game', 'App\\Controllers\\GameController@index');
+
+$router->get('/score', 'App\\Controllers\\ScoreController@index');
+
+$router->post('/scores', 'App\\Controllers\\ScoreController@store');
+
+$router->get('/player', 'App\\Controllers\\PlayerController@index');
+
+$router->get('/card', 'App\\Controllers\\CardController@index');
+
+$router->get('/leaderboard', 'App\\Controllers\\LeaderboardController@index');
+
+
+
+
 
 // Exécution du routeur :
 // On analyse l'URI et la méthode HTTP pour appeler le contrôleur et la méthode correspondants

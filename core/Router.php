@@ -1,4 +1,5 @@
 <?php
+
 namespace Core;
 
 /**
@@ -27,6 +28,17 @@ class Router
     public function get(string $path, string $action): void
     {
         $this->routes['GET'][$path] = $action;
+    }
+
+    /**
+     * Enregistre une route POST
+     *
+     * @param string $path   Chemin de la route (ex: "/articles")
+     * @param string $handler Action à exécuter (ex: "App\Controllers\ArticleController@index")
+     */
+    public function post(string $path, string $handler): void
+    {
+        $this->routes['POST'][$path] = $handler;
     }
 
     /**
