@@ -35,7 +35,6 @@ $defaultDiff = $_GET['difficulty'] ?? 'medium';
 
             <a href="/" class="btn ghost">Accueil</a>
             <button id="start" class="btn">Start</button>
-            <button id="regen" class="btn ghost">Regénérer</button>
             <button id="reset" class="btn">Réinitialiser</button>
         </div>
 
@@ -287,7 +286,19 @@ $defaultDiff = $_GET['difficulty'] ?? 'medium';
 
                 if (res.ok) {
                     if (json && json.success !== false) {
-                        saveMsgEl.textContent = 'Score enregistré. Merci !';
+                        // afficher message puis proposer actions : Rejouer / Accueil
+                        saveMsgEl.innerHTML = 'Score enregistré. Merci !<div style="margin-top:10px;"><button id="replayAfterSave" class="btn">Rejouer</button> <a href="/" class="btn ghost" id="homeAfterSave">Accueil</a></div>';
+                        // attacher listeners aux nouveaux boutons
+                        const replayBtn = document.getElementById('replayAfterSave');
+                        const homeBtn = document.getElementById('homeAfterSave');
+                        const onReplay = () => {
+                            close();
+                            // relancer une partie avec la difficulté actuelle
+                            buildBoard(document.getElementById('difficulty').value || 'medium');
+                        };
+                        if (replayBtn) replayBtn.addEventListener('click', onReplay);
+                        if (homeBtn) homeBtn.addEventListener('click', () => {
+                            /* allow normal navigation */ });
                     } else {
                         // réponse OK mais payload inattendu
                         saveMsgEl.textContent = 'Enregistré (réponse inattendue).';
@@ -304,7 +315,7 @@ $defaultDiff = $_GET['difficulty'] ?? 'medium';
                 document.getElementById('saveMsg').style.display = 'block';
                 document.getElementById('saveMsg').textContent = 'Erreur réseau. Vérifiez que /scores existe et le serveur est démarré.';
             }
-            setTimeout(closeModal, 1200);
+            // Ne pas fermer automatiquement : laisser l'utilisateur choisir Rejouer ou Accueil
         }
         form.addEventListener('submit', onSubmit);
         cancel.addEventListener('click', onCancel);
@@ -323,7 +334,9 @@ $defaultDiff = $_GET['difficulty'] ?? 'medium';
     }
 
     document.getElementById('start').addEventListener('click', () => buildBoard(document.getElementById('difficulty').value));
-    document.getElementById('regen').addEventListener('click', () => buildBoard(document.getElementById('difficulty').value));
+    // Le bouton "Regénérer" a été retiré du HTML ; on attache le listener seulement si l'élément existe
+    const regenBtn = document.getElementById('regen');
+    if (regenBtn) regenBtn.addEventListener('click', () => buildBoard(document.getElementById('difficulty').value));
     document.getElementById('reset').addEventListener('click', () => {
         buildBoard(document.getElementById('difficulty').value || 'normal');
         document.getElementById('status').textContent = 'Jeu réinitialisé.';

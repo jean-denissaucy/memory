@@ -48,7 +48,7 @@
 
   <!-- Contenu principal injecté depuis BaseController -->
   <main>
-    <?= $content ?>
+    <?= $content ?? '' ?>
   </main>
 </body>
 

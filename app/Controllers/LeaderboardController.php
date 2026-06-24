@@ -23,7 +23,19 @@ class LeaderboardController
     public function index(): void
     {
         $title = 'Classement';
-        $top = $this->leaderboard->getTop(50);
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $limit = isset($_GET['limit']) ? max(1, min(200, (int)$_GET['limit'])) : 50;
+        $offset = ($page - 1) * $limit;
+
+        $total = 0;
+        try {
+            $total = $this->leaderboard->countAll();
+            $top = $this->leaderboard->getTop($limit, $offset);
+        } catch (\Exception $e) {
+            $top = [];
+        }
+
+        $pages = $limit > 0 ? (int)ceil($total / $limit) : 1;
         include __DIR__ . '/../Views/score/index.php';
     }
 
@@ -32,12 +44,15 @@ class LeaderboardController
      */
     public function topJson(): void
     {
-        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 50;
-        $limit = max(1, min(500, $limit));
-        $top = $this->leaderboard->getTop($limit);
+        $limit = isset($_GET['limit']) ? max(1, min(500, (int)$_GET['limit'])) : 50;
+        $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+        $offset = ($page - 1) * $limit;
+
+        $total = $this->leaderboard->countAll();
+        $top = $this->leaderboard->getTop($limit, $offset);
 
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode(['success' => true, 'data' => $top], JSON_UNESCAPED_UNICODE);
+        echo json_encode(['success' => true, 'data' => $top, 'meta' => ['total' => $total, 'page' => $page, 'pages' => $limit ? (int)ceil($total / $limit) : 1]], JSON_UNESCAPED_UNICODE);
     }
 
     /**

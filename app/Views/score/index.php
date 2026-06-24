@@ -40,9 +40,26 @@ $top = $top ?? [];
             </table>
         </div>
 
-        <div style="margin-top:12px;text-align:center;">
-            <a href="/game" class="btn">Rejouer</a>
-            <a href="/" class="btn ghost">Accueil</a>
-        </div>
+        <?php if (!empty($pages) && $pages > 1): ?>
+            <div style="margin-top:12px;text-align:center;">
+                <?php
+                $currentPage = isset($page) ? (int)$page : 1;
+                $limitParam = isset($limit) ? (int)$limit : 50;
+                $base = '/leaderboard';
+                ?>
+                <?php if ($currentPage > 1): ?>
+                    <a href="<?= $base ?>?page=<?= $currentPage - 1 ?>&limit=<?= $limitParam ?>" class="btn">&laquo; Précédent</a>
+                <?php endif; ?>
+                <span style="margin:0 12px;">Page <?= $currentPage ?> / <?= $pages ?></span>
+                <?php if ($currentPage < $pages): ?>
+                    <a href="<?= $base ?>?page=<?= $currentPage + 1 ?>&limit=<?= $limitParam ?>" class="btn">Suivant &raquo;</a>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div style="margin-top:12px;text-align:center;">
+                <a href="/game" class="btn">Rejouer</a>
+                <a href="/" class="btn ghost">Accueil</a>
+            </div>
+        <?php endif; ?>
     </div>
 </div>

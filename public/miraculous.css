@@ -276,6 +276,31 @@ body{
 	
 }
 
+/* Héros (accueil) : avatars uniformes */
+.players .player{
+	/* limite la largeur du bloc afin d'aligner les avatars */
+	width: 120px;
+	box-sizing: border-box;
+}
+.players .player .hero-img{
+	display:block;
+	width:120px;
+	height:120px;
+	object-fit:cover;
+	object-position:center center;
+	border-radius:10px;
+	margin:0 auto 8px;
+	/* légère ombre pour l'esthétique */
+	box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+	border:1px solid rgba(255,255,255,0.03);
+}
+
+/* small screens : réduire légèrement */
+@media (max-width:600px){
+	.players .player{ width:92px }
+	.players .player .hero-img{ width:92px; height:92px; }
+}
+
 /* Small screens */
 @media (max-width:600px){
 	:root{--card-size:92px}

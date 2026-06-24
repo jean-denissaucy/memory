@@ -24,17 +24,29 @@ class ClasseLeaderboard
      * @param int $limit
      * @return array
      */
-    public function getTop(int $limit = 50): array
+    public function getTop(int $limit = 50, int $offset = 0): array
     {
         $sql = "SELECT s.id, COALESCE(s.player_name,u.username) AS player, s.score, s.moves, s.time_seconds, s.created_at
-		        FROM scores s
-		        LEFT JOIN users u ON u.id = s.user_id
-		        ORDER BY s.score DESC, s.time_seconds ASC, s.moves ASC
-		        LIMIT :limit";
+                FROM scores s
+                LEFT JOIN users u ON u.id = s.user_id
+                ORDER BY s.score DESC, s.time_seconds ASC, s.moves ASC
+                LIMIT :offset, :limit";
         $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    /**
+     * Retourne le nombre total d'entrées dans la table scores
+     * @return int
+     */
+    public function countAll(): int
+    {
+        $stmt = $this->pdo->query("SELECT COUNT(1) AS c FROM scores");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return isset($row['c']) ? (int)$row['c'] : 0;
     }
 
     /**

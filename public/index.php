@@ -25,6 +25,8 @@ $router->get('/player', 'App\\Controllers\\PlayerController@index');
 $router->get('/card', 'App\\Controllers\\CardController@index');
 
 $router->get('/leaderboard', 'App\\Controllers\\LeaderboardController@index');
+// endpoint JSON paginé pour le leaderboard
+$router->get('/leaderboard/top', 'App\\Controllers\\LeaderboardController@topJson');
 
 
 
